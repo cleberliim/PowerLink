@@ -1,0 +1,22 @@
+/portallog
+    /config
+        conn.php
+        functions.php
+        menus.php
+    /includes
+        header.php
+        footer.php
+    /pages
+        dashboard.php
+        profile.php
+        [outros arquivos de páginas BI]
+    /assets
+        /images
+            integralogis.svg
+            user.png
+        /css
+            custom.css
+    createaccount.php
+    login.php
+    sair.php
+    admin.php
