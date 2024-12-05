@@ -34,7 +34,7 @@ Este repositório contém a estrutura completa do projeto **Powerlink**, incluin
 
 1. **Clone o Repositório:**
    ```bash
-   git clone https://github.com/seuusuario/Powerlink.git
+   git clone https://github.com/cleberliim/Powerlink.git
    ```
 
 2. **Configurar o Banco de Dados:**
