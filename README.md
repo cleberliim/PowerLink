@@ -39,7 +39,7 @@ Este repositório contém a estrutura completa do projeto **Powerlink**, incluin
 
 2. **Configurar o Banco de Dados:**
    - Certifique-se de criar o banco de dados conforme definido no arquivo `config/conn.php`.
-   - Importe o arquivo SQL [portallog.sql](./portallog.sql) para configurar as tabelas iniciais.
+   - Importe o arquivo SQL [Powerlink.sql](./Powerlink.sql) para configurar as tabelas iniciais.
 
 3. **Ajustar Arquivo `conn.php`:**
    - Configure os detalhes de conexão com o banco de dados (host, usuário, senha, nome do banco).
