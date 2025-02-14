@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <div class="flex w-1/2 justify-center items-center bg-white">
             <form autocomplete="off" class="bg-white w-96" method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
-                <h1 class="text-slate-400 font-bold text-3xl mb-10">Login</h1>
+                <h1 class="text-zinc-950 font-bold text-3xl mb-10">Login</h1>
                 <div class="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
                     <input class="w-full pl-2 outline-none border-none" type="text" name="email" required placeholder="Email" />
                 </div>

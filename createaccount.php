@@ -43,8 +43,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Criar</title>
 </head>
 
-<body class="bg-slate-200">
+<body class="bg-zinc-950">
     <div class="h-screen flex items-center justify-center">
+        <div class="absolute top-0 left-0 p-4">
+            <a href="login.php" class="text-slate-400 hover:underline">Voltar ao login</a>
+        </div>
+
+
         <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
             <h1 class="text-3xl font-bold mb-6 text-center text-slate-400 pb-10">Criar conta</h1>
             <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
