@@ -21,8 +21,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     } else {
         $erro = true;
-        $debug_message .= "Falha na autenticação do usuário: $email<br>";
-        error_log("Falha na autenticação do usuário: $email");
     }
 }
 ?>
