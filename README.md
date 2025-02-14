@@ -26,7 +26,7 @@ PowerLink é um gerenciador de Power BI que permite administrar seus dashboards 
         [outros arquivos]  # Páginas relacionadas ao BI
     /assets
         /images
-            integralogis.svg   # Logo da empresa
+            logo.svg   # Logo da empresa
             user.png           # Imagem padrão de usuário
         /css
             custom.css         # Estilo personalizado
