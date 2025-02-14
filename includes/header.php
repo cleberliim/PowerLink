@@ -64,7 +64,7 @@ require_once __DIR__ . '/../config/session_check.php';
                     </div>
 
                     <div class="flex flex-col space-y-3 p-2">
-                        <a href="../pages/profile.php" class="transition hover:text-blue-600">Perfil</a>
+                        <a href="../admin.php" class="transition hover:text-blue-600">Admin</a>
                     </div>
 
                     <div class="p-2">
