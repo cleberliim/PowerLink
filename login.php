@@ -46,7 +46,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <img class="h-6 w-auto" src="assets/images/logo-header.png" alt="Logo">
             </p>
         </div>
-        <div class="w-full md:w-1/2 flex justify-center items-center bg-white p-6">
+        <div class="w-full md:w-1/2 flex justify-center items-center bg-white pt-40 md:pt-0">
+
             <form autocomplete="off" class="bg-white w-full max-w-sm" method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
                 <h1 class="text-zinc-950 font-bold text-3xl mb-10 text-center">Login</h1>
                 <div class="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">

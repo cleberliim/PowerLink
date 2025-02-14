@@ -2,6 +2,10 @@
 
 PowerLink é um gerenciador de Power BI que permite administrar seus dashboards com facilidade, garantindo praticidade e insights valiosos sem complicações.
 
+## Telas
+
+![Descrição da imagem](assets/images/screen-login.png)
+
 ## Estrutura de Diretórios
 
 ```plaintext
