@@ -73,7 +73,10 @@ if (isset($_POST['usuario_id']) && $_POST['usuario_id'] != '0') {
 </head>
 
 <body class="bg-gray-800 flex justify-center items-center min-h-screen">
-
+    <div class="absolute top-0 left-0 p-4">
+        <a href="./config/menus.php" class="text-white text-base">Voltar para Dashboard</a>
+    </div>
+    
     <div class="w-full max-w-4xl p-4">
         <div class="bg-white rounded-lg p-6 shadow-lg mb-8">
             <h1 class="text-3xl font-semibold text-center text-gray-900 mb-6">Administração de Acessos</h1>
@@ -118,10 +121,10 @@ if (isset($_POST['usuario_id']) && $_POST['usuario_id'] != '0') {
         </div>
 
         <div class="table-container mt-6">
-            <div class="overflow-x-auto">
-                <table class="min-w-full table-auto text-gray-200">
+            <div class="overflow-x-auto bg-white rounded-lg shadow-lg">
+                <table class="min-w-full table-auto text-gray-900">
                     <thead>
-                        <tr>
+                        <tr class="bg-gray-200">
                             <th class="px-4 py-2 text-left">Email</th>
                             <th class="px-4 py-2 text-left">BI Nome</th>
                             <th class="px-4 py-2 text-left">Ações</th>
@@ -133,25 +136,29 @@ if (isset($_POST['usuario_id']) && $_POST['usuario_id'] != '0') {
                         while ($usuario = $usuarios_result->fetch_assoc()) :
                             $usuario_id = $usuario['id'];
                             $stmt = $conn->prepare("
-                                SELECT bi.id_menu, bi.nome, bi.link_bi 
-                                FROM usuario_bi  
-                                INNER JOIN bi ON usuario_bi.id_bi = bi.id_menu  
-                                WHERE usuario_bi.id_usuario = ?
-                            ");
+                        SELECT bi.id_menu, bi.nome, bi.link_bi 
+                        FROM usuario_bi  
+                        INNER JOIN bi ON usuario_bi.id_bi = bi.id_menu  
+                        WHERE usuario_bi.id_usuario = ?
+                    ");
                             $stmt->bind_param("i", $usuario_id);
                             $stmt->execute();
                             $acessos = $stmt->get_result();
                             while ($acesso = $acessos->fetch_assoc()) :
                         ?>
-                                <tr>
-                                    <td class="border px-4 py-2"><?= $usuario['email'] ?></td>
-                                    <td class="border px-4 py-2"><?= $acesso['nome'] ?></td>
-                                    <td class="border px-4 py-2 text-center">
-                                        <a href="<?= $acesso['link_bi'] ?>" target="_blank" class="text-blue-400 hover:underline">Abrir</a>
+                                <tr class="border-b">
+                                    <td class="px-4 py-2"><?= $usuario['email'] ?></td>
+                                    <td class="px-4 py-2"><?= $acesso['nome'] ?></td>
+                                    <td class="px-4 py-2 text-center">
+                                        <a href="<?= $acesso['link_bi'] ?>" target="_blank" class="text-blue-500 hover:text-blue-700">
+                                            <i class="fas fa-external-link-alt"></i> Abrir
+                                        </a>
                                         <form action="admin.php" method="POST" class="inline">
                                             <input type="hidden" name="usuario_id" value="<?= $usuario['id'] ?>">
                                             <input type="hidden" name="bi_id" value="<?= $acesso['id_menu'] ?>">
-                                            <button type="submit" name="action" value="remove" class="text-red-400 hover:underline ml-4">Excluir</button>
+                                            <button type="submit" name="action" value="remove" class="text-red-500 hover:text-red-700 ml-4">
+                                                <i class="fas fa-trash-alt"></i> Excluir
+                                            </button>
                                         </form>
                                     </td>
                                 </tr>
@@ -159,16 +166,17 @@ if (isset($_POST['usuario_id']) && $_POST['usuario_id'] != '0') {
                         endwhile; ?>
                     </tbody>
                 </table>
+
             </div>
         </div>
-    </div>
 
-    <script>
-        function toggleRemove() {
-            document.getElementById('add-bi-fields').style.display = 'none';
-            document.getElementById('remove-bi-fields').style.display = 'block';
-        }
-    </script>
+
+        <script>
+            function toggleRemove() {
+                document.getElementById('add-bi-fields').style.display = 'none';
+                document.getElementById('remove-bi-fields').style.display = 'block';
+            }
+        </script>
 </body>
 
 </html>
