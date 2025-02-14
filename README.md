@@ -1,7 +1,6 @@
+# Powerlink
 
-# Powerlink Project
-
-Este repositório contém a estrutura completa do projeto **Powerlink**, incluindo configurações, páginas, ativos e scripts necessários para sua execução.
+PowerLink é um gerenciador de Power BI que permite administrar seus dashboards com facilidade, garantindo praticidade e insights valiosos sem complicações.
 
 ## Estrutura de Diretórios
 
@@ -33,15 +32,18 @@ Este repositório contém a estrutura completa do projeto **Powerlink**, incluin
 ## Instruções de Configuração
 
 1. **Clone o Repositório:**
+
    ```bash
    git clone https://github.com/cleberliim/Powerlink.git
    ```
 
 2. **Configurar o Banco de Dados:**
+
    - Certifique-se de criar o banco de dados conforme definido no arquivo `config/conn.php`.
    - Importe o arquivo SQL [Powerlink.sql](./Powerlink.sql) para configurar as tabelas iniciais.
 
 3. **Ajustar Arquivo `conn.php`:**
+
    - Configure os detalhes de conexão com o banco de dados (host, usuário, senha, nome do banco).
 
 4. **Executar o Projeto:**
@@ -62,7 +64,7 @@ Este repositório contém a estrutura completa do projeto **Powerlink**, incluin
 
 ## Contribuição
 
-Sinta-se à vontade para contribuir com melhorias e novas funcionalidades. Crie um *pull request* ou abra uma *issue* para discutirmos as mudanças.
+Sinta-se à vontade para contribuir com melhorias e novas funcionalidades. Crie um _pull request_ ou abra uma _issue_ para discutirmos as mudanças.
 
 ## Licença
 
