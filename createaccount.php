@@ -38,9 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <style>
-        .bg-comando {
-            background: linear-gradient(to bottom, #111525, #161C31) !important;
-        }
+
     </style>
     <title>Criar</title>
 </head>
@@ -62,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label class="block text-gray-700 mb-2">Senha</label>
                     <input class="w-full border-2 py-2 px-3 rounded-2xl" type="password" name="senha" required />
                 </div>
-                <button type="submit" class="block w-full bg-comando mt-4 py-2 rounded-2xl text-white font-semibold mb-2">Criar Conta</button>
+                <button type="submit" class="block w-full bg-zinc-950 mt-4 py-2 rounded-2xl text-white font-semibold mb-2">Criar Conta</button>
                 <?php if ($erro) { ?>
                     <script>
                         toastr.error("Erro ao criar a conta. Tente novamente.");

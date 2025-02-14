@@ -38,18 +38,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <style>
-        .bg-comando {
-            background: linear-gradient(to bottom, #111525, #161C31) !important;
-        }
+
     </style>
     <title>Login</title>
 </head>
 
 <body class="bg-slate-200">
     <div class="h-screen flex">
-        <div class="flex w-full justify-around items-center relative">
-            <div class="w-full">
-                <img src="assets/images/t.svg" class="absolute inset-0 h-full w-full object-cover" alt="COMANDO">
+        <div class="flex w-full justify-around items-center relative bg-zinc-950">
+            <div class="w-full flex justify-center items-center">
+                <p class="text-3xl text-slate-400 flex items-center gap-4">
+                    PowerLink
+                    <img class="h-6 w-auto" src="assets/images/logo-header.png" alt="Logo">
+                </p>
             </div>
         </div>
         <div class="flex w-1/2 justify-center items-center bg-white">
@@ -61,9 +62,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="flex items-center border-2 py-2 px-3 rounded-2xl">
                     <input class="w-full pl-2 outline-none border-none" type="password" name="senha" required placeholder="Password" />
                 </div>
-                <button type="submit" class="block w-full bg-comando mt-4 py-2 rounded-2xl text-white font-semibold mb-2 mt-8">Entrar</button>
+                <button type="submit" class="block w-full bg-zinc-950 mt-4 py-2 rounded-2xl text-white font-semibold mb-2 mt-8">Entrar</button>
                 <div class="text-center mt-4">
-                    <a href="createaccount.php" class="text-blue-500 hover:underline">Solicitar Acesso</a>
+                    <a href="createaccount.php" class="text-zinc-950 hover:underline">Solicitar Acesso</a>
                 </div>
                 <?php if ($erro) { ?>
                     <p style="color: red;">Falha na autenticação. Verifique email e senha.</p>
@@ -74,6 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </form>
         </div>
     </div>
+
 </body>
 
 </html>
