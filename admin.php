@@ -70,81 +70,96 @@ if (isset($_POST['usuario_id']) && $_POST['usuario_id'] != '0') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-    <style>
-        .bg-comando {
-            background: linear-gradient(to bottom, #111525, #161C31) !important;
-        }
-    </style>
 </head>
 
-<body class="bg-slate-200">
-    <div class="h-screen flex items-center justify-center">
-        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
-            <h1 class="text-3xl font-bold mb-6 text-center text-slate-400">Administração de Acessos</h1>
-            <form method="post" action="admin.php" class="mb-6" id="adminForm">
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">Usuário</label>
-                    <select name="usuario_id" class="w-full border-2 py-2 px-3 rounded-2xl" onchange="this.form.submit()">
+<body class="bg-gray-800 flex justify-center items-center min-h-screen">
+
+    <div class="w-full max-w-4xl p-4">
+        <div class="bg-white rounded-lg p-6 shadow-lg mb-8">
+            <h1 class="text-3xl font-semibold text-center text-gray-900 mb-6">Administração de Acessos</h1>
+            <form method="post" action="admin.php" class="space-y-6" id="adminForm">
+                <div>
+                    <label class="block text-gray-900">Usuário</label>
+                    <select name="usuario_id" class="w-full p-3 rounded-lg text-black" onchange="this.form.submit()">
                         <option value="0">Selecione um usuário</option>
                         <?php while ($usuario = $usuarios_result->fetch_assoc()) : ?>
                             <option value="<?= $usuario['id'] ?>" <?= isset($usuario_id) && $usuario['id'] == $usuario_id ? 'selected' : '' ?>><?= $usuario['email'] ?></option>
                         <?php endwhile; ?>
                     </select>
                 </div>
-                <div class="mb-4" id="add-bi-fields">
-                    <label class="block text-gray-700 mb-2">Nome do BI</label>
-                    <input type="text" name="bi_nome" class="w-full border-2 py-2 px-3 rounded-2xl" required>
-                    <label class="block text-gray-700 mb-2 mt-4">Link do BI</label>
-                    <input type="url" name="link_bi" class="w-full border-2 py-2 px-3 rounded-2xl" required>
+
+                <div class="add-bi-form" id="add-bi-fields" style="display: <?= isset($usuario_id) && $usuario_id != '0' ? 'block' : 'none' ?>;">
+                    <div>
+                        <label class="block text-gray-900">Nome do BI</label>
+                        <input type="text" name="bi_nome" class="w-full p-3 rounded-lg text-black" required>
+                    </div>
+                    <div class="mt-4">
+                        <label class="block text-gray-900">Link do BI</label>
+                        <input type="url" name="link_bi" class="w-full p-3 rounded-lg text-black" required>
+                    </div>
                 </div>
-                <div class="mb-4" id="remove-bi-fields" style="display: none;">
-                    <label class="block text-gray-700 mb-2">BI</label>
-                    <select name="bi_id" class="w-full border-2 py-2 px-3 rounded-2xl">
-                        <?php foreach ($bi_associados as $bi) : ?>
-                            <option value="<?= $bi['id_menu'] ?>"><?= $bi['nome'] ?></option>
-                        <?php endforeach; ?>
-                    </select>
+
+                <div class="remove-bi-form" id="remove-bi-fields" style="display: none;">
+                    <div>
+                        <label class="block text-gray-900">BI</label>
+                        <select name="bi_id" class="w-full p-3 rounded-lg text-black">
+                            <?php foreach ($bi_associados as $bi) : ?>
+                                <option value="<?= $bi['id_menu'] ?>"><?= $bi['nome'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
                 </div>
-                <div class="flex space-x-4 justify-center">
-                    <button type="submit" name="action" value="add" class="bg-comando text-white py-2 px-4 rounded-2xl">Adicionar Acesso</button>
-                    <button type="button" onclick="toggleRemove()" class="bg-red-500 text-white py-2 px-4 rounded-2xl">Remover Acesso</button>
+
+                <div class="flex justify-center space-x-6 mt-6">
+                    <button type="submit" name="action" value="add" class="bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition">Adicionar Acesso</button>
+                    <button type="button" onclick="toggleRemove()" class="bg-red-500 text-white p-3 rounded-lg hover:bg-red-600 transition">Remover Acesso</button>
                 </div>
             </form>
-            <h2 class="text-2xl font-bold mb-4 text-center text-slate-400">Acessos por Usuário</h2>
-            <?php
-            $usuarios_result->data_seek(0); // Reset o ponteiro do resultado
-            while ($usuario = $usuarios_result->fetch_assoc()) :
-                $usuario_id = $usuario['id'];
+        </div>
 
-                // Consultar acessos do usuário
-                $stmt = $conn->prepare("
-                    SELECT bi.id_menu, bi.nome, bi.link_bi 
-                    FROM usuario_bi  
-                    INNER JOIN bi ON usuario_bi.id_bi = bi.id_menu  
-                    WHERE usuario_bi.id_usuario = ?
-                ");
-                $stmt->bind_param("i", $usuario_id);
-                $stmt->execute();
-                $acessos = $stmt->get_result();
-
-                echo "<h2 class='text-2xl font-bold mb-4 text-center text-slate-400'>{$usuario['email']}</h2>";
-                echo "<div class='mb-4'><h3 class='text-xl font-semibold text-gray-700'>{$usuario['email']}</h3><ul class='list-disc list-inside'>";
-
-                while ($acesso = $acessos->fetch_assoc()) {
-                    echo "<li class='text-gray-600'>{$acesso['nome']} - <a href='{$acesso['link_bi']}' target='_blank' class='text-blue-500 hover:underline'>Abrir BI</a>
-                        <form method='post' action='admin.php' style='display:inline;'>
-                            <input type='hidden' name='usuario_id' value='{$usuario_id}'>
-                            <input type='hidden' name='bi_id' value='{$acesso['id_menu']}'>
-                            <input type='hidden' name='action' value='remove'>
-                            <button type='submit' class='text-red-500 hover:underline ml-2'>X</button>
-                        </form>
-                    </li>";
-                }
-
-                echo "</ul></div>";
-                $stmt->close();
-            endwhile;
-            ?>
+        <div class="table-container mt-6">
+            <div class="overflow-x-auto">
+                <table class="min-w-full table-auto text-gray-200">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-2 text-left">Email</th>
+                            <th class="px-4 py-2 text-left">BI Nome</th>
+                            <th class="px-4 py-2 text-left">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $usuarios_result->data_seek(0); // Resetando o ponteiro para os usuários
+                        while ($usuario = $usuarios_result->fetch_assoc()) :
+                            $usuario_id = $usuario['id'];
+                            $stmt = $conn->prepare("
+                                SELECT bi.id_menu, bi.nome, bi.link_bi 
+                                FROM usuario_bi  
+                                INNER JOIN bi ON usuario_bi.id_bi = bi.id_menu  
+                                WHERE usuario_bi.id_usuario = ?
+                            ");
+                            $stmt->bind_param("i", $usuario_id);
+                            $stmt->execute();
+                            $acessos = $stmt->get_result();
+                            while ($acesso = $acessos->fetch_assoc()) :
+                        ?>
+                                <tr>
+                                    <td class="border px-4 py-2"><?= $usuario['email'] ?></td>
+                                    <td class="border px-4 py-2"><?= $acesso['nome'] ?></td>
+                                    <td class="border px-4 py-2 text-center">
+                                        <a href="<?= $acesso['link_bi'] ?>" target="_blank" class="text-blue-400 hover:underline">Abrir</a>
+                                        <form action="admin.php" method="POST" class="inline">
+                                            <input type="hidden" name="usuario_id" value="<?= $usuario['id'] ?>">
+                                            <input type="hidden" name="bi_id" value="<?= $acesso['id_menu'] ?>">
+                                            <button type="submit" name="action" value="remove" class="text-red-400 hover:underline ml-4">Excluir</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                        <?php endwhile;
+                        endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -152,22 +167,7 @@ if (isset($_POST['usuario_id']) && $_POST['usuario_id'] != '0') {
         function toggleRemove() {
             document.getElementById('add-bi-fields').style.display = 'none';
             document.getElementById('remove-bi-fields').style.display = 'block';
-            document.querySelector('[name="bi_nome"]').disabled = true;
-            document.querySelector('[name="link_bi"]').disabled = true;
-            document.querySelector('[name="bi_id"]').disabled = false;
-            const removeButton = document.querySelector('button[onclick="toggleRemove()"]');
-            removeButton.type = 'submit';
-            removeButton.name = 'action';
-            removeButton.value = 'remove';
         }
-
-        document.getElementById('adminForm').addEventListener('submit', function(event) {
-            if (document.getElementById('remove-bi-fields').style.display !== 'block') {
-                document.querySelector('[name="bi_nome"]').disabled = false;
-                document.querySelector('[name="link_bi"]').disabled = false;
-                document.querySelector('[name="bi_id"]').disabled = true;
-            }
-        });
     </script>
 </body>
 
