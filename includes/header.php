@@ -44,16 +44,16 @@ require_once __DIR__ . '/../config/session_check.php';
     <!-- page -->
     <main class="min-h-screen w-full bg-gray-100 text-gray-700" x-data="layout">
         <!-- header page -->
-        <header class="flex w-full items-center justify-between bg-comando p-2">
+        <header class="flex w-full items-center justify-between bg-slate-900 p-2">
             <!-- logo -->
             <div class="flex items-center space-x-2 z-50">
                 <button type="button" class="text-3xl" @click="toggleAside"><i class="bx bx-menu text-white pl-2"></i></button>
-                <div><a href="../config/menus.php"><img class="block h-6 w-auto pl-6" src="../assets/images/integralogis.svg"></a></div>
+                <div><a href="../config/menus.php"><img class="block h-6 w-auto pl-6" src="../assets/images/logo-header.png"></a></div>
             </div>
 
             <!-- button profile -->
             <div>
-                <button type="button" @click="profileOpen = !profileOpen" @click.outside="profileOpen = false" class="w-10 h-10 overflow-hidden rounded-full">
+                <button type="button" @click="profileOpen = !profileOpen" @click.outside="profileOpen = false" class="w-8 h-8 overflow-hidden rounded-full">
                     <img src="../assets/images/user.png" alt="user" />
                 </button>
 
