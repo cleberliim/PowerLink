@@ -14,43 +14,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action'])) {
     $usuario_id = $_POST['usuario_id'];
     $action = $_POST['action'];
 
-    if ($action == 'add') {
+    // Adiciona acesso
+    if ($action == 'add' && isset($_POST['bi_nome'], $_POST['link_bi'])) {
         $bi_nome = $_POST['bi_nome'];
         $link_bi = $_POST['link_bi'];
 
         // Insere um novo BI
-        $sql_bi = "INSERT INTO bi (nome_menu, link_bi) VALUES (?, ?)";
+        $sql_bi = "INSERT INTO bi (nome, link_bi) VALUES (?, ?)";
         $stmt_bi = $conn->prepare($sql_bi);
         $stmt_bi->bind_param("ss", $bi_nome, $link_bi);
         $stmt_bi->execute();
         $bi_id = $stmt_bi->insert_id;
 
         // Associa o novo BI ao usuário
-        $sql_usuario_bi = "INSERT INTO usuario_bi (id_usuario, id_bi, iframe_link) VALUES (?, ?, ?)";
+        $sql_usuario_bi = "INSERT INTO usuario_bi (id_usuario, id_bi, link_bi) VALUES (?, ?, ?)";
         $stmt_usuario_bi = $conn->prepare($sql_usuario_bi);
         $stmt_usuario_bi->bind_param("iis", $usuario_id, $bi_id, $link_bi);
         $stmt_usuario_bi->execute();
-    } else if ($action == 'remove') {
-        if (isset($_POST['bi_id'])) {
-            $bi_id = $_POST['bi_id'];
+    }
 
-            // Remove a associação do BI ao usuário
-            $sql = "DELETE FROM usuario_bi WHERE id_usuario = ? AND id_bi = ?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ii", $usuario_id, $bi_id);
-            $stmt->execute();
-        }
+    // Remove acesso
+    else if ($action == 'remove' && isset($_POST['bi_id'])) {
+        $bi_id = $_POST['bi_id'];
+
+        // Remove a associação do BI ao usuário
+        $sql = "DELETE FROM usuario_bi WHERE id_usuario = ? AND id_bi = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ii", $usuario_id, $bi_id);
+        $stmt->execute();
     }
 }
 
 // Obtém usuários
-$usuarios = $conn->query("SELECT * FROM usuarios");
+$usuarios_result = $conn->query("SELECT * FROM usuarios");
 
-// Obtém BIs associados ao usuário selecionado, se um usuário for selecionado
+// Obtém BIs associados ao usuário selecionado
 $bi_associados = [];
 if (isset($_POST['usuario_id']) && $_POST['usuario_id'] != '0') {
     $usuario_id = $_POST['usuario_id'];
-    $bi_associados_result = $conn->query("SELECT bi.id_menu, bi.nome_menu FROM bi JOIN usuario_bi ON bi.id_menu = usuario_bi.id_bi WHERE usuario_bi.id_usuario = $usuario_id");
+    $bi_associados_result = $conn->query("SELECT bi.id_menu, bi.nome FROM bi JOIN usuario_bi ON bi.id_menu = usuario_bi.id_bi WHERE usuario_bi.id_usuario = $usuario_id");
     while ($bi_associado = $bi_associados_result->fetch_assoc()) {
         $bi_associados[] = $bi_associado;
     }
@@ -84,7 +86,7 @@ if (isset($_POST['usuario_id']) && $_POST['usuario_id'] != '0') {
                     <label class="block text-gray-700 mb-2">Usuário</label>
                     <select name="usuario_id" class="w-full border-2 py-2 px-3 rounded-2xl" onchange="this.form.submit()">
                         <option value="0">Selecione um usuário</option>
-                        <?php while ($usuario = $usuarios->fetch_assoc()) : ?>
+                        <?php while ($usuario = $usuarios_result->fetch_assoc()) : ?>
                             <option value="<?= $usuario['id'] ?>" <?= isset($usuario_id) && $usuario['id'] == $usuario_id ? 'selected' : '' ?>><?= $usuario['email'] ?></option>
                         <?php endwhile; ?>
                     </select>
@@ -99,7 +101,7 @@ if (isset($_POST['usuario_id']) && $_POST['usuario_id'] != '0') {
                     <label class="block text-gray-700 mb-2">BI</label>
                     <select name="bi_id" class="w-full border-2 py-2 px-3 rounded-2xl">
                         <?php foreach ($bi_associados as $bi) : ?>
-                            <option value="<?= $bi['id_menu'] ?>"><?= $bi['nome_menu'] ?></option>
+                            <option value="<?= $bi['id_menu'] ?>"><?= $bi['nome'] ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -110,28 +112,39 @@ if (isset($_POST['usuario_id']) && $_POST['usuario_id'] != '0') {
             </form>
             <h2 class="text-2xl font-bold mb-4 text-center text-slate-400">Acessos por Usuário</h2>
             <?php
-            $usuarios->data_seek(0); // Reset the result set pointer
-            while ($usuario = $usuarios->fetch_assoc()) :
+            $usuarios_result->data_seek(0); // Reset o ponteiro do resultado
+            while ($usuario = $usuarios_result->fetch_assoc()) :
                 $usuario_id = $usuario['id'];
-                $acessos = $conn->query("SELECT bi.id_menu, bi.nome_menu, usuario_bi.iframe_link FROM usuario_bi JOIN bi ON usuario_bi.id_bi = bi.id_menu WHERE usuario_bi.id_usuario = $usuario_id");
+
+                // Consultar acessos do usuário
+                $stmt = $conn->prepare("
+                    SELECT bi.id_menu, bi.nome, bi.link_bi 
+                    FROM usuario_bi  
+                    INNER JOIN bi ON usuario_bi.id_bi = bi.id_menu  
+                    WHERE usuario_bi.id_usuario = ?
+                ");
+                $stmt->bind_param("i", $usuario_id);
+                $stmt->execute();
+                $acessos = $stmt->get_result();
+
+                echo "<h2 class='text-2xl font-bold mb-4 text-center text-slate-400'>{$usuario['email']}</h2>";
+                echo "<div class='mb-4'><h3 class='text-xl font-semibold text-gray-700'>{$usuario['email']}</h3><ul class='list-disc list-inside'>";
+
+                while ($acesso = $acessos->fetch_assoc()) {
+                    echo "<li class='text-gray-600'>{$acesso['nome']} - <a href='{$acesso['link_bi']}' target='_blank' class='text-blue-500 hover:underline'>Abrir BI</a>
+                        <form method='post' action='admin.php' style='display:inline;'>
+                            <input type='hidden' name='usuario_id' value='{$usuario_id}'>
+                            <input type='hidden' name='bi_id' value='{$acesso['id_menu']}'>
+                            <input type='hidden' name='action' value='remove'>
+                            <button type='submit' class='text-red-500 hover:underline ml-2'>X</button>
+                        </form>
+                    </li>";
+                }
+
+                echo "</ul></div>";
+                $stmt->close();
+            endwhile;
             ?>
-                <div class="mb-4">
-                    <h3 class="text-xl font-semibold text-gray-700"><?= $usuario['email'] ?></h3>
-                    <ul class="list-disc list-inside">
-                        <?php while ($acesso = $acessos->fetch_assoc()) : ?>
-                            <li class="text-gray-600">
-                                <?= $acesso['nome_menu'] ?> - <a href="<?= $acesso['iframe_link'] ?>" target="_blank" class="text-blue-500 hover:underline">Abrir BI</a>
-                                <form method="post" action="admin.php" style="display:inline;">
-                                    <input type="hidden" name="usuario_id" value="<?= $usuario_id ?>">
-                                    <input type="hidden" name="bi_id" value="<?= $acesso['id_menu'] ?>">
-                                    <input type="hidden" name="action" value="remove">
-                                    <button type="submit" class="text-red-500 hover:underline ml-2">X</button>
-                                </form>
-                            </li>
-                        <?php endwhile; ?>
-                    </ul>
-                </div>
-            <?php endwhile; ?>
         </div>
     </div>
 

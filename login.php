@@ -13,10 +13,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $debug_message .= "Tentativa de login com email: $email<br>";
 
     if (autenticar_usuario($conn, $email, $senha)) {
-        $debug_message .= "Autenticação bem-sucedida para o email: $email<br>";
-        $debug_message .= "Redirecionando para /portallog/config/menus.php após autenticação bem-sucedida<br>";
-        error_log("Autenticação bem-sucedida para o email: $email. Redirecionando...");
-        echo $debug_message; // Mensagem de depuração
+        session_start(); // Garante que a sessão esteja ativa
+
+        // Definir sessão de usuário autenticado
+        $_SESSION['usuario'] = $email;
+        $_SESSION['admin'] = true; // Ou verificar no banco se o usuário é admin antes de definir como true
+
         header("Location: config/menus.php");
         exit();
     } else {
@@ -56,7 +58,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="flex items-center border-2 py-2 px-3 rounded-2xl">
                     <input class="w-full pl-2 outline-none border-none" type="password" name="senha" required placeholder="Password" />
                 </div>
-                <button type="submit" class="block w-full bg-zinc-950 mt-4 py-2 rounded-2xl text-white font-semibold mb-2">Entrar</button>
+                <button type="submit" class="block w-full bg-zinc-950 hover:bg-zinc-800 mt-4 py-2 rounded-2xl text-white font-semibold mb-2">
+                    Entrar
+                </button>
                 <div class="text-center mt-4">
                     <a href="createaccount.php" class="text-zinc-950 hover:underline">Solicitar Acesso</a>
                 </div>
