@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/session_check.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -89,8 +90,8 @@ require_once __DIR__ . '/../config/session_check.php';
                 if ($bi_menus->num_rows > 0) {
                     while ($bi = $bi_menus->fetch_assoc()) {
                         echo '<a href="#" @click.prevent="iframeSrc = \'' . $bi['link_bi'] . '\'" class="flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600">';
-                        echo '<span><i class="fas fa-icon"></i></span>'; // Atualize o ícone conforme necessário
-                        echo '<span class="pl-4 text-black">' . $bi['nome_menu'] . '</span>';
+                        echo '<span><i class="fas fa-icon"></i></span>';
+                        echo '<span class="pl-4 text-black">' . $bi['nome'] . '</span>'; // $bi['nome'] contém o nome do menu que está no banco na tabela bi
                         echo '</a>';
                     }
                 } else {
